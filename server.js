@@ -35,7 +35,7 @@ app.set("view engine", "handlebars");
 app.use(express.static("public"));
 
 //database configuration with mongoose
-//mongoose.connect("mongodb://localhost/mongocheerio"); //when using local
+//mongoose.connect("mongodb://localhost/mongotesting"); //when using local
 mongoose.connect("mongodb://toby:t0929547@ds159371.mlab.com:59371/heroku_0n7jv0sc");
 
 var db = mongoose.connection;
@@ -54,7 +54,7 @@ db.once("open", function() {
 
 //a GET request to scrape the rawstory website
 app.get("/scrape", function(req, res) {
-    request("https://www.wired.com", function(error, response, html) {
+    request("https://www.pinkbike.com", function(error, response, html) {
         var $ = cheerio.load(html);
         
         $("div.recent-post-widget").each(function(i, element) {
