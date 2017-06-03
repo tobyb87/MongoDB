@@ -54,7 +54,7 @@ db.once("open", function() {
 
 //a GET request to scrape the rawstory website
 app.get("/scrape", function(req, res) {
-    request("https://www.wired.com/category/gear/", function(error, response, html) {
+    request("https://www.wired.com", function(error, response, html) {
         var $ = cheerio.load(html);
         
         $("div.recent-post-widget").each(function(i, element) {
