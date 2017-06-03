@@ -1,7 +1,7 @@
 {
-  "name": "mongo-scraper",
+  "name": "wiredmongo",
   "version": "1.0.0",
-  "description": "MongoDB project",
+  "description": "#Scraper",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/tobyb87/MongoDB.git"
   },
-  "author": "Toby Boyd",
+  "author": "Tob",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/tobyb87/MongoDB/issues"
@@ -19,12 +19,12 @@
   "homepage": "https://github.com/tobyb87/MongoDB#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
-    "cheerio": "^1.0.0-rc.1",
+    "cheerio": "^0.22.0",
     "express": "^4.15.3",
-    "mongoose": "^4.10.4",
-    "morgan": "^1.8.2",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^4.10.2",
+    "morgan": "^1.8.1",
     "request": "^2.81.0"
   },
-  "devDependencies": {},
-  "keywords": []
+  "devDependencies": {}
 }

@@ -7,10 +7,10 @@ var mongoose = require("mongoose");
 //requiring Note and Article models
 var Note = require("./models/note.js");
 var Article = require("./models/article.js");
-// scraping tools
+//our scraping tools
 var request = require("request");
 var cheerio = require("cheerio");
-//set  Promises
+//set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 
 //Initialize Express
@@ -25,17 +25,18 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 
-//handlebars
+//handlebars setup
 var exphbs = require("express-handlebars"); 
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-//public a static dir
+//make public a static dir
 app.use(express.static("public"));
 
 //database configuration with mongoose
-mongoose.connect("mongodb://heroku_0n7jv0sc:@ds159371.mlab.com:59371/heroku_0n7jv0sc");
+//mongoose.connect("mongodb://localhost/mongocheerio"); //when using local
+mongoose.connect("mongodb://toby:t0929547@ds159371.mlab.com:59371/heroku_0n7jv0sc");
 
 var db = mongoose.connection;
 
@@ -53,12 +54,13 @@ db.once("open", function() {
 
 //a GET request to scrape the rawstory website
 app.get("/scrape", function(req, res) {
-    request("https://www.wired.com/", function(error, response, html) {
+    request("https://www.wired.com/category/gear/", function(error, response, html) {
         var $ = cheerio.load(html);
         
         $("div.recent-post-widget").each(function(i, element) {
 
             var result = {};
+            //add the text and href of every link, and save them as properties of the result object
             result.title = $(this).find("div.recent-post-widget-title").text().trim();
             result.link = $(this).find("div.recent-post-widget-title").find("a").attr("href");
             result.image = $(this).find("a").find("img").attr("src");
@@ -81,13 +83,13 @@ app.get("/scrape", function(req, res) {
     res.redirect("/articles");
 });
 
-//redirect root
+//redirect root route to display articles in database
 app.get("/", function(req, res) {
     res.redirect("/articles");
 });
 
-//route to get the articles we scraped
-//show recent article first
+//route to get the articles we scraped from MongoDB
+//display most recent article first
 app.get("/articles", function(req, res) {
     Article.find({}).sort({_id:-1}).exec(function(error, doc) {
         if (error) {
