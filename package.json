@@ -1,5 +1,5 @@
 {
-  "name": "mongodb-scraper",
+  "name": "mongo-scraper",
   "version": "1.0.0",
   "description": "MongoDB project",
   "main": "server.js",

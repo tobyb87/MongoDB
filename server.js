@@ -3,25 +3,29 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
+
+//requiring Note and Article models
 var Note = require("./models/note.js");
 var Article = require("./models/article.js");
+// scraping tools
 var request = require("request");
 var cheerio = require("cheerio");
-//set mongoose to leverage built in JavaScript ES6 Promises
+//set  Promises
 mongoose.Promise = Promise;
 
 //Initialize Express
 var app = express();
 
 //set an initial port
-var PORT = process.env.PORT || 8000;
+var PORT = process.env.PORT || 8080;
 
-// morgan and body parser 
+//use morgan and body parser with our app
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({
     extended: false
 }));
 
+//handlebars
 var exphbs = require("express-handlebars"); 
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -30,7 +34,8 @@ app.set("view engine", "handlebars");
 //public a static dir
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://heroku_0n7jv0sc:@ds159371.mlab.com:59371/heroku_0n7jv0sc");
+//database configuration with mongoose
+mongoose.connect("mongodb://heroku_f1hp6r4t:2ip8oolrig8ghvdtajq4ctdopg@ds153521.mlab.com:53521/heroku_f1hp6r4t");
 
 var db = mongoose.connection;
 
@@ -46,15 +51,14 @@ db.once("open", function() {
 
 //**************** routes ****************
 
-//a GET request to scrape the  website
+//a GET request to scrape the rawstory website
 app.get("/scrape", function(req, res) {
-    request("https://www.wired.com/", function(error, response, html) {
+    request("http://www.rawstory.com/", function(error, response, html) {
         var $ = cheerio.load(html);
         
         $("div.recent-post-widget").each(function(i, element) {
 
             var result = {};
-            //add the text and href of every link, and save them as properties of the result object
             result.title = $(this).find("div.recent-post-widget-title").text().trim();
             result.link = $(this).find("div.recent-post-widget-title").find("a").attr("href");
             result.image = $(this).find("a").find("img").attr("src");
@@ -77,13 +81,13 @@ app.get("/scrape", function(req, res) {
     res.redirect("/articles");
 });
 
-//redirect root route to display articles in database
+//redirect root
 app.get("/", function(req, res) {
     res.redirect("/articles");
 });
 
-//route to get the articles we scraped from MongoDB
-//display most recent article first
+//route to get the articles we scraped
+//show recent article first
 app.get("/articles", function(req, res) {
     Article.find({}).sort({_id:-1}).exec(function(error, doc) {
         if (error) {
@@ -120,7 +124,7 @@ app.post("/articles/:id", function(req, res) {
     result.body = req.body.newComment;
     var newNote = new Note(result);
 
-    //save new note in db
+    //save the new note in the db
     newNote.save(function(error, doc) {
         if (error) {
             console.log(error);
@@ -139,7 +143,7 @@ app.post("/articles/:id", function(req, res) {
     });
 });
 
-
+//delete selected note
 app.post("/delete/:id", function(req, res) {
     console.log("req.body: " + JSON.stringify(req.body));
     Note.remove({_id: req.params.id}, function(err) {
@@ -153,7 +157,7 @@ app.post("/delete/:id", function(req, res) {
     });
 });
 
-//listen on port 8000
+//listen on port 3000
 app.listen(PORT, function() {
     console.log("app is listening on PORT: " + PORT);
 });
