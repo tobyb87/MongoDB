@@ -52,17 +52,17 @@ db.once("open", function() {
 
 //**************** routes ****************
 
-//a GET request to scrape the rawstory website
+//a GET request to scrape the wired website
 app.get("/scrape", function(req, res) {
-    request("https://www.pinkbike.com", function(error, response, html) {
+    request("https://www.wired.com", function(error, response, html) {
         var $ = cheerio.load(html);
         
         $("div.recent-post-widget").each(function(i, element) {
 
             var result = {};
             //add the text and href of every link, and save them as properties of the result object
-            result.title = $(this).find("div.recent-post-widget-title").text().trim();
-            result.link = $(this).find("div.recent-post-widget-title").find("a").attr("href");
+            result.title = $(this).find("div.flex-row").text().trim();
+            result.link = $(this).find("div.flex-row").find("a").attr("href");
             result.image = $(this).find("a").find("img").attr("src");
                 console.log(result);
 
