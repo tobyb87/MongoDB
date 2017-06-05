@@ -52,12 +52,12 @@ db.once("open", function() {
 
 //**************** routes ****************
 
-//a GET request to scrape the wired website
+//a GET request to scrape the rawstory website
 app.get("/scrape", function(req, res) {
-    request("https://www.wired.com", function(error, response, html) {
+    request("https://www.wired.com/", function(error, response, html) {
         var $ = cheerio.load(html);
         
-        $("div.recent-post-widget").each(function(i, element) {
+        $("div.flex-row").each(function(i, element) {
 
             var result = {};
             //add the text and href of every link, and save them as properties of the result object
