@@ -1,5 +1,5 @@
 {
-  "name": "wiredmongo",
+  "name": "mongoscraper",
   "version": "1.0.0",
   "description": "#Scraper",
   "main": "server.js",
