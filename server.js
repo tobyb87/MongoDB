@@ -35,7 +35,7 @@ app.set("view engine", "handlebars");
 app.use(express.static("public"));
 
 //database configuration with mongoose
-//mongoose.connect("mongodb://localhost/testing"); when using local
+//mongoose.connect("mongodb://localhost/testing"); //when using local
 mongoose.connect("mongodb://Toby:t0929547@ds153521.mlab.com:53521/heroku_f1hp6r4t");
 
 var db = mongoose.connection;
@@ -54,15 +54,15 @@ db.once("open", function() {
 
 //a GET request to scrape the kutx website
 app.get("/scrape", function(req, res) {
-    request("http://www.kutx.com/", function(error, response, html) {
+    request("http://www.rawstory.com/", function(error, response, html) {
         var $ = cheerio.load(html);
         
-        $("div.div.DOP_ThumbnailScroller_Thumb").each(function(i, element) {
+        $("div.recent-post-widget").each(function(i, element) {
 
             var result = {};
             //add the text and href of every link, and save them as properties of the result object
-            result.title = $(this).find("div.DOP_ThumbnailScroller_Thumb").text().trim();
-            result.link = $(this).find("div.DOP_ThumbnailScroller_Thumb").find("a").attr("href");
+            result.title = $(this).find("div.recent-post-widget").text().trim();
+            result.link = $(this).find("div.recent-post-widget").find("a").attr("href");
             result.image = $(this).find("a").find("img").attr("src");
                 console.log(result);
 
